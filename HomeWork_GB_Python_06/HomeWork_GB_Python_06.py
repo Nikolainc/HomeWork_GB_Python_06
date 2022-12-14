@@ -6,12 +6,11 @@ import time
 #========= НАСТРОЙКИ =========
 # 0 - пустое поле, 1 - корабль, 5 - запрет размещения кораблей, 7 - выстрел без попадания, 9 - попадание 
 
-_symbols_print_player = {0:"~",1:"▽",5:"~",7:"X",9:"☑"} # символы для поля игрок
-_symbols_print_enemy = {0:"~",1:"~",5:"~",7:"X",9:"☑"} # символы для поля противник
+_symbols_print_player = {0:"■",1:"▽",5:"■",7:"X",9:"☑"} # символы для поля игрок
+_symbols_print_enemy = {0:"■",1:"■",5:"■",7:"X",9:"☑"} # символы для поля противник
 _boat_size = {3:4, 2:3, 1:2, 0:1} # размеры кораблей
 _boat_counts_on_map = {3:1, 2:2, 1:3, 0:4} # кол-во кораблей
 _start_boat_variants = len(_boat_counts_on_map) - 1 # кол-во вариантов кораблей
-map_size = 10 # размер карты
 
 def PrintMap(array, view = False): # Вывод карты. 2 атрибута. С видимыми кораблями и скрытыми
     if view:
@@ -89,6 +88,7 @@ def GetRandomBlockPositionForBoat(array, size, count = 100, horizontal = True, Y
         else:
             random_start_Y = PositionOffset(array, random_start_Y)
             random_start_X = PositionOffset(array, random_start_X)
+        count -= 1
     result = False
     random_start_Y = 0
     random_start_X = 0
@@ -159,7 +159,7 @@ def MakeTurn(array, player = False):
             array[Y][X] = 7
             return False
 
-
+map_size = 10 # размер карты
 move_counter = 1
 map_enemy = [[0] * map_size for i in range(map_size)]
 map_palyer = [[0] * map_size for i in range(map_size)]
@@ -173,20 +173,20 @@ PrintMap(map_palyer, True)
 
 while CountOfBoats(map_palyer) > 0 or CountOfBoats(map_enemy) > 0:
     print(f"\n================= Ваш ход {move_counter} =================\n")
-    print(f"У противника {CountOfBoats(map_enemy)} кораблей")
+
     if MakeTurn(map_enemy, True):
-        print("\n||||| Попадание! |||||")
+        print("\n||||| Вы попали! |||||\n")
     else:
-        print("\n||||| Промах! |||||")
+        print("\n||||| Вы промахнулись! |||||\n")
     move_counter += 1
-    print(f"\n================= Поле противника =================\n")
+
     PrintMap(map_enemy, False)
-    time.sleep(randint(1, 3))
+    time.sleep(randint(2, 5))
     if MakeTurn(map_palyer, False):
-        print("\n||||| Попадание! |||||")
+        print("\n||||| Попадание по вам! |||||\n")
     else:
-        print("\n||||| Промах! |||||")
-    print(f"\n================= Ваше поле =================\n")
+        print("\n||||| Промах по вам! |||||\n")
+
     PrintMap(map_palyer, True)
 
 if CountOfBoats(map_palyer) > 0:
